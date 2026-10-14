@@ -6,6 +6,10 @@
 
 \*\*Designing and building a secure, automated, and observable cloud-native platform using Infrastructure as Code, CI/CD, Kubernetes, DevSecOps, and GitOps.\*\*
 
+## 🏗️ System Architecture
+
+![SecureCloud — Complete DevSecOps and GitOps Platform Architecture](docs/securecloud-architecture.png)
+
 
 
 <p align="center">
