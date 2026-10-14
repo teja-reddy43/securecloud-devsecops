@@ -83,6 +83,15 @@ jobs:
       - name: Verify dependency versions in image
         run: |
           docker run --rm --entrypoint python securecloud-api:${{ github.sha }} -m pip show msgpack setuptools urllib3
+      - name: Inspect Trivy package detection
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: securecloud-api:${{ github.sha }}
+          format: table
+          scanners: vuln
+          vuln-type: library
+          severity: HIGH,CRITICAL
+          exit-code: "0"
 
       - name: Scan image with Trivy
         uses: aquasecurity/trivy-action@v0.36.0
