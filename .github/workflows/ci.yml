@@ -80,6 +80,9 @@ jobs:
 
       - name: Build SecureCloud image
         run: docker build -t securecloud-api:${{ github.sha }} .
+      - name: Verify dependency versions in image
+        run: |
+          docker run --rm --entrypoint python securecloud-api:${{ github.sha }} -m pip show msgpack setuptools urllib3
 
       - name: Scan image with Trivy
         uses: aquasecurity/trivy-action@v0.36.0
