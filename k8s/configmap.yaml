@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: securecloud-config
+  namespace: securecloud
+  labels:
+    app.kubernetes.io/part-of: securecloud
+data:
+  APP_ENV: "dev"
+  APP_NAME: "SecureCloud API"
+  LOG_LEVEL: "info"

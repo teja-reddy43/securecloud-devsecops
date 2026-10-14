@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: securecloud-reader
+  namespace: securecloud
+  labels:
+    app.kubernetes.io/part-of: securecloud
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: securecloud-config-reader
+  namespace: securecloud
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: securecloud-config-reader
+  namespace: securecloud
+subjects:
+  - kind: ServiceAccount
+    name: securecloud-reader
+    namespace: securecloud
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: securecloud-config-reader

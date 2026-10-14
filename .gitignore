@@ -8,3 +8,6 @@ __pycache__/
 # Terraform state
 *.tfstate
 *.tfstate.*
+# Local Kubernetes secret manifests
+k8s/secret.yaml
+k8s/secret*.yaml
