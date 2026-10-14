@@ -1,4 +1,4 @@
-\# ☁️ SecureCloud
+**\# ☁️ SecureCloud**
 
 \### Cloud-Native DevSecOps \& GitOps Platform
 
@@ -30,7 +30,7 @@
 
 
 
-\## 📖 Table of Contents
+**\## 📖 Table of Contents**
 
 
 
@@ -64,7 +64,7 @@
 
 
 
-\## 🚀 Project Overview
+**\## 🚀 Project Overview**
 
 
 
@@ -88,7 +88,7 @@ The goal is to demonstrate not just how to deploy an application, but how to des
 
 
 
-\## 🎯 Project Objectives
+**\## 🎯 Project Objectives**
 
 
 
@@ -118,7 +118,7 @@ The goal is to demonstrate not just how to deploy an application, but how to des
 
 
 
-\## 🏗️ System Architecture
+**\## 🏗️ System Architecture**
 
 
 
@@ -134,7 +134,7 @@ The following diagram represents the \*\*overall target architecture of SecureCl
 
 
 
-\### Architecture at a glance
+**\### Architecture at a glance**
 
 
 
@@ -164,7 +164,7 @@ The AWS infrastructure foundation and local Kubernetes environment are developed
 
 
 
-\## 🧩 Architecture Components
+**\## 🧩 Architecture Components**
 
 
 
@@ -360,7 +360,7 @@ Together, these capabilities are intended to support performance analysis, incid
 
 
 
-\## 🔄 End-to-End Workflow
+**\## 🔄 End-to-End Workflow**
 
 
 
@@ -397,8 +397,7 @@ This workflow establishes a consistent path from source-code changes to deployme
 \---
 
 
-
-\## 🛠️ Technology Stack
+**\## 🛠️ Technology Stack**
 
 
 
@@ -446,7 +445,7 @@ This workflow establishes a consistent path from source-code changes to deployme
 
 
 
-\## 📁 Repository Structure
+**\## 📁 Repository Structure**
 
 
 
@@ -508,7 +507,7 @@ Additional directories for GitOps configuration, monitoring, logging, and deploy
 
 
 
-\## 💻 Local Development
+**\## 💻 Local Development**
 
 
 
@@ -614,7 +613,7 @@ These commands provide the local application and container workflow. Infrastruct
 
 
 
-\## 🔐 Security Design
+**\## 🔐 Security Design**
 
 
 
@@ -658,7 +657,7 @@ Secrets, local environment files, credentials, and Terraform state files should 
 
 
 
-\## 📈 Observability and Reliability
+**\## 📈 Observability and Reliability**
 
 
 
@@ -694,7 +693,7 @@ The objective is to connect operational signals to engineering actions: detect a
 
 
 
-\## 🧠 Engineering Principles
+**\## 🧠 Engineering Principles**
 
 
 
@@ -724,7 +723,7 @@ SecureCloud follows these principles throughout its development:
 
 
 
-\## 📚 Documentation
+**\## 📚 Documentation**
 
 
 
@@ -752,7 +751,7 @@ This README provides the project overview and overall system architecture. Detai
 
 
 
-\## 🔗 Repository
+**\## 🔗 Repository**
 
 
 
