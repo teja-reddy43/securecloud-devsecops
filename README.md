@@ -667,6 +667,96 @@ The published image was pulled successfully from GHCR and executed locally.
 
 These checks verify that the published image can be retrieved and that the API starts and responds to requests. They do not, by themselves, establish production readiness.
 
+## ☸️ Kubernetes Deployment and Verification
+
+SecureCloud is deployed to a local Kubernetes cluster running through Docker Desktop. The application image is pulled from GitHub Container Registry (GHCR) and runs as a Kubernetes Deployment with two replicas.
+
+### Deployment Environment
+
+| Property | Value |
+|---|---|
+| Kubernetes context | `docker-desktop` |
+| Namespace | `securecloud` |
+| Deployment | `securecloud-api` |
+| Container image | `ghcr.io/teja-reddy43/securecloud-api:latest` |
+| Replicas | 2 |
+| Service type | `ClusterIP` |
+| Service port | `8000` |
+
+### Verify the Deployment
+
+Check the Kubernetes context and node:
+
+```bash
+kubectl config current-context
+kubectl get nodes
+```
+
+Check the deployment and running pods:
+
+```bash
+kubectl get deployments -n securecloud
+kubectl get pods -n securecloud
+```
+
+Check the container image used by the deployment:
+
+```bash
+kubectl get deployment securecloud-api -n securecloud -o jsonpath="{.spec.template.spec.containers[0].image}"
+```
+
+Wait for the rollout to complete:
+
+```bash
+kubectl rollout status deployment/securecloud-api -n securecloud --timeout=120s
+```
+
+### Verify Service Connectivity
+
+Inspect the Kubernetes Service and its endpoints:
+
+```bash
+kubectl get service,endpoints -n securecloud
+```
+
+Forward local port `8000` to the Kubernetes Service:
+
+```bash
+kubectl port-forward service/securecloud-api 8000:8000 -n securecloud
+```
+
+Keep the port-forward command running in one terminal. Open another terminal and test the endpoints:
+
+```bash
+curl http://localhost:8000/health
+curl http://localhost:8000/ready
+```
+
+Expected responses:
+
+```json
+{"status":"healthy"}
+```
+
+```json
+{"status":"ready"}
+```
+
+### Deployment Validation Results
+
+The following checks have been completed successfully:
+
+- The GHCR image was pulled and deployed to the local Kubernetes cluster.
+- The deployment rollout completed successfully.
+- Both application replicas reached the `Running` and `Ready` state.
+- The Kubernetes Service exposed port `8000` and reported two pod endpoints.
+- The `/health` endpoint returned `{"status":"healthy"}`.
+- The `/ready` endpoint returned `{"status":"ready"}`.
+
+During rollout, the new pod initially experienced startup-probe failures. The application subsequently started successfully, and the rollout completed. This highlights the importance of checking container logs, pod events, health probes, and rollout status rather than relying on deployment commands alone.
+
+These results validate the current local deployment workflow. They do not establish that the application is production-ready or that every planned platform component has been implemented.
+
 **\## 🔐 Security Design**
 
 
