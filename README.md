@@ -615,7 +615,57 @@ These commands provide the local application and container workflow. Infrastruct
 
 \---
 
+## 📦 Container Image Publishing — GitHub Container Registry
 
+SecureCloud's Docker image is published to GitHub Container Registry (GHCR), allowing the container to be pulled and run independently of the local build environment.
+
+### Published image
+
+| Property | Value |
+|---|---|
+| Registry | GitHub Container Registry (GHCR) |
+| Image | `ghcr.io/teja-reddy43/securecloud-api` |
+| Version | `1.0.0` |
+| Image digest | `sha256:0036d8f7716825b7899bcd2c55726f885717aacf78523b3ae5ee9ff7b47d7fc2` |
+
+### Authenticate with GHCR
+
+Create a GitHub Personal Access Token with the required package permissions. Keep the token private and never commit it to the repository.
+
+```bash
+docker login ghcr.io -u teja-reddy43
+```
+
+Enter the token at Docker's password prompt.
+
+### Tag and publish the image
+
+```bash
+docker tag securecloud-api:security-fix ghcr.io/teja-reddy43/securecloud-api:1.0.0
+
+docker push ghcr.io/teja-reddy43/securecloud-api:1.0.0
+```
+
+### Pull and run the published image
+
+```bash
+docker pull ghcr.io/teja-reddy43/securecloud-api:1.0.0
+
+docker run --rm -p 8000:8000 ghcr.io/teja-reddy43/securecloud-api:1.0.0
+```
+
+Open `http://localhost:8000/docs` to access the interactive API documentation.
+
+### Verification results
+
+The published image was pulled successfully from GHCR and executed locally.
+
+- The FastAPI application started successfully.
+- `GET /health` returned HTTP `200 OK`.
+- The response body was `{"status":"healthy"}`.
+- Requests to `/docs` and `/openapi.json` returned HTTP `200 OK`.
+
+These checks verify that the published image can be retrieved and that the API starts and responds to requests. They do not, by themselves, establish production readiness.
 
 **\## 🔐 Security Design**
 
