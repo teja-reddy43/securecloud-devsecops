@@ -23,8 +23,10 @@ spec:
         app.kubernetes.io/name: securecloud-api
         app.kubernetes.io/part-of: securecloud
     spec:
-      serviceAccountName: securecloud-reader
       automountServiceAccountToken: false
+      serviceAccountName: securecloud-reader
+      imagePullSecrets:
+        - name: ghcr-pull-secret
       securityContext:
         runAsNonRoot: true
         runAsUser: 10001
@@ -35,18 +37,31 @@ spec:
         - name: api
           image: ghcr.io/teja-reddy43/securecloud-api:1.0.0@sha256:0036d8f7716825b7899bcd2c55726f885717aacf78523b3ae5ee9ff7b47d7fc2
           imagePullPolicy: Always
-          envFrom:
-            - configMapRef:
-                name: securecloud-config
           ports:
             - name: http
               containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: securecloud-config
           securityContext:
             allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
             capabilities:
               drop:
                 - ALL
-            readOnlyRootFilesystem: true
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 2
+            failureThreshold: 30
           livenessProbe:
             httpGet:
               path: /health
@@ -59,16 +74,3 @@ spec:
               port: http
             initialDelaySeconds: 5
             periodSeconds: 5
-          startupProbe:
-            httpGet:
-              path: /health
-              port: http
-            failureThreshold: 30
-            periodSeconds: 2
-          resources:
-            requests:
-              cpu: 100m
-              memory: 128Mi
-            limits:
-              cpu: 500m
-              memory: 256Mi
