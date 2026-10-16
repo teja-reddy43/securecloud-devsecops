@@ -33,13 +33,11 @@ spec:
           type: RuntimeDefault
       containers:
         - name: api
-          image: ghcr.io/teja-reddy43/securecloud-api:latest
-          imagePullPolicy: IfNotPresent
+          image: ghcr.io/teja-reddy43/securecloud-api:1.0.0@sha256:0036d8f7716825b7899bcd2c55726f885717aacf78523b3ae5ee9ff7b47d7fc2
+          imagePullPolicy: Always
           envFrom:
             - configMapRef:
                 name: securecloud-config
-            - secretRef:
-                name: securecloud-secret
           ports:
             - name: http
               containerPort: 8000
