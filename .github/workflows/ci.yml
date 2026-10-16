@@ -92,10 +92,29 @@ jobs:
           severity: CRITICAL,HIGH
           skip-files: '**/pip/_vendor/bom.cdx.json'
 
+  kubernetes-security:
+    name: Kubernetes Manifest Security
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Scan Kubernetes manifests with Checkov
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: k8s/
+          framework: kubernetes
+          quiet: true
+          soft_fail: false
+
   publish:
     name: Publish Image to GHCR
     runs-on: ubuntu-latest
-    needs: [test, gitleaks, semgrep, trivy]
+    needs: [test, gitleaks, semgrep, trivy, kubernetes-security]
 
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
