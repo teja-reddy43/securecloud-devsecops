@@ -33,7 +33,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: api
-          image: securecloud-api:latest
+          image: ghcr.io/teja-reddy43/securecloud-api:latest
           imagePullPolicy: IfNotPresent
           envFrom:
             - configMapRef:
