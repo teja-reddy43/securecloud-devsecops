@@ -757,6 +757,46 @@ During rollout, the new pod initially experienced startup-probe failures. The ap
 
 These results validate the current local deployment workflow. They do not establish that the application is production-ready or that every planned platform component has been implemented.
 
+🛡️** DevSecOps Security Gates — Stage 7**
+
+Completed and verified
+The GitHub Actions workflow includes the following required jobs:
+- Tests: application tests using pytest.
+- Gitleaks: secret scanning.
+- Semgrep: static application security analysis.
+- Trivy: container image vulnerability scanning, configured to fail on CRITICAL/HIGH findings that are not ignored by the configured policy.
+- Checkov: Kubernetes manifest security checks against k8s/.
+- GHCR publishing: publishes the container image after the required validation jobs pass.
+The complete workflow, including Checkov and GHCR publishing, passed for commit c122e3d. Checkov findings were addressed by setting an explicit image pull policy, pinning the image by digest, and removing an unused secret reference from the Deployment. The application does not currently consume DEMO_SECRET; the local k8s/secret.yaml remains untracked/ignored and must not be committed.
+Outstanding runtime issue: private GHCR image pull
+The CI/security-gate work above is complete. A separate local-cluster authentication issue remains open and must not be represented as a passing deployment test.
+
+Observations:
+- docker pull ghcr.io/teja-reddy43/securecloud-api:1.0.0 succeeded locally and reported digest sha256:0036d8f7716825b7899bcd2c55726f885717aacf78523b3ae5ee9ff7b47d7fc2.
+- Kubernetes pod events reported 401 Unauthorized while requesting an anonymous GHCR token for the private package, resulting in ErrImagePull / ImagePullBackOff.
+- The securecloud namespace contains a Secret named ghcr-pull-secret of type kubernetes.io/dockerconfigjson; a non-sensitive structure check confirmed a ghcr.io auth entry exists. This confirms the Secret's structure, but does not prove the stored PAT is valid or authorized for the package.
+- k8s/deployment.yaml was updated to reference imagePullSecrets: - name: ghcr-pull-secret and pushed in commit 363a1c2 (Fix private GHCR image pulls in Kubernetes). The resulting pull has not yet been verified as successful.
+- At the latest reported check, Argo CD showed Synced / Progressing; one pod was ImagePullBackOff, another was Running but not Ready, and one older pod was Running / Ready. The cluster also had recent instability and elevated container restarts.
+Current status: CI/CD security gates and image publishing are complete; private registry authentication for the local Kubernetes runtime remains unresolved. Do not claim the current deployment is healthy until both replicas are Ready and the Argo CD Application reports Healthy.
+Safe diagnostic commands
+kubectl get secret ghcr-pull-secret -n securecloud
+kubectl get pods -n securecloud
+kubectl get application securecloud -n argocd
+kubectl describe pod <pod-name> -n securecloud
+Do not print, paste into chat, or commit the PAT or the decoded .dockerconfigjson data. Keep the Kubernetes pull Secret out of Git.
+Useful commands
+Check Application status:
+kubectl get application securecloud -n argocd
+
+Check the deployment and pods:
+kubectl get deployment,pods,service -n securecloud
+
+Forward the API locally and test health/readiness from a second terminal:
+kubectl port-forward service/securecloud-api 8000:8000 -n securecloud
+curl http://localhost:8000/health
+curl http://localhost:8000/ready
+
+
 **\## 🔐 Security Design**
 
 
